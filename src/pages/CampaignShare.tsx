@@ -39,7 +39,9 @@ export function CampaignShare() {
   };
 
   const hasInconsistencies = campaignProducts.some(cp => {
-    return !publications.find(p => p.campaña_producto_id === cp.id) || !products.find(p => p.id === cp.producto_id);
+    const pub = publications.find(p => p.campaña_producto_id === cp.id);
+    const product = products.find(p => p.id === cp.producto_id);
+    return !pub || !product || product.estado !== 'activo';
   });
 
   const handleFinishCampaign = async () => {
@@ -108,6 +110,15 @@ export function CampaignShare() {
               <div key={cp.id} className="bg-white rounded-lg shadow-sm border border-red-200 overflow-hidden flex flex-col p-4">
                 <p className="text-red-600 font-semibold">Error de inconsistencia</p>
                 <p className="text-sm text-gray-600">No se encontró la publicación generada o el producto original para este ítem. Debes generar la campaña nuevamente.</p>
+              </div>
+            );
+          }
+
+          if (product.estado !== 'activo') {
+            return (
+              <div key={cp.id} className="bg-white rounded-lg shadow-sm border border-amber-200 overflow-hidden flex flex-col p-4">
+                <p className="text-amber-600 font-semibold">Producto no activo</p>
+                <p className="text-sm text-gray-600">El producto "{product.nombre}" no está activo (estado: {product.estado}). Debes activarlo en el catálogo o generar la campaña nuevamente.</p>
               </div>
             );
           }

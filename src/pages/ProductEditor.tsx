@@ -105,7 +105,7 @@ export function ProductEditor() {
       } else if (id) {
         await ProductService.updateProduct(id, productData);
       }
-      navigate('/');
+      navigate('/catalog');
     } catch (err: any) {
       setError(err.message || 'Error al guardar');
     } finally {
@@ -118,7 +118,7 @@ export function ProductEditor() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link to="/" className="text-gray-500 hover:text-gray-900">
+        <Link to="/catalog" className="text-gray-500 hover:text-gray-900">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">
@@ -249,7 +249,7 @@ export function ProductEditor() {
 
         <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
           <Link
-            to="/"
+            to="/catalog"
             className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors"
           >
             Cancelar

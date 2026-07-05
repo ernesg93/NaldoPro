@@ -24,7 +24,7 @@ export function Campaigns() {
     if (!config) {
       await SettingsService.initializeDefaultConfig({
         tasa_usd_cup: 350,
-        redondeo_multiplo: 50,
+        redondeo_multiplo: 5,
         whatsapp_numero: '',
         plantilla_default_id: 'default-template'
       });
