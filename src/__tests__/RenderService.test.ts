@@ -116,6 +116,95 @@ describe('RenderService', () => {
     }).toThrow(/Precio manual inválido/);
   });
 
+  it('debe renderizar variantes cuando existe un bloque variantes y el mapa es provisto', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1',
+      campaña_id: 'camp1',
+      producto_id: 'prod1',
+      orden: 1,
+      usar_precio_manual: false,
+      estado_envio: 'pendiente'
+    };
+
+    const blocksWithVariants: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'texto', titulo: 'Saludo', contenido: 'Hola mundo', orden: 1, visible: true },
+      { id: 'b2', plantilla_id: 't1', tipo: 'lista', titulo: '', orden: 2, visible: true },
+      { id: 'b3', plantilla_id: 't1', tipo: 'variantes', titulo: 'Variantes disponibles', orden: 3, visible: true },
+    ];
+
+    const variantMap: Record<string, import('../services/RenderService').ProductVariantGroup[]> = {
+      prod1: [
+        { tipo: 'Sabores', valores: ['Chocolate', 'Vainilla'] },
+        { tipo: 'Tamaños', valores: ['200 g', '500 g'] },
+      ],
+    };
+
+    const pubs = RenderService.generatePublications('camp1', [cp], dummyProducts, blocksWithVariants, 350, 50, variantMap);
+
+    expect(pubs.length).toBe(1);
+    expect(pubs[0].texto_generado).toContain('*Variantes disponibles*');
+    expect(pubs[0].texto_generado).toContain('Sabores');
+    expect(pubs[0].texto_generado).toContain('• Chocolate');
+    expect(pubs[0].texto_generado).toContain('• Vainilla');
+    expect(pubs[0].texto_generado).toContain('Tamaños');
+    expect(pubs[0].texto_generado).toContain('• 200 g');
+    expect(pubs[0].texto_generado).toContain('• 500 g');
+  });
+
+  it('debe renderizar bloques de contenido estructurado dentro del bloque lista', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1',
+      campaña_id: 'camp1',
+      producto_id: 'prod1',
+      orden: 1,
+      usar_precio_manual: false,
+      estado_envio: 'pendiente'
+    };
+
+    const contentBlocksMap: Record<string, import('../services/RenderService').ProductContentBlock[]> = {
+      prod1: [
+        { tipo: 'texto', titulo: 'Descripción', items: [{ valor: 'Producto de alta calidad' }] },
+        { tipo: 'lista', titulo: 'Características', items: [{ valor: 'Ligero' }, { valor: 'Durable' }] },
+        { tipo: 'separador', titulo: '', items: [] },
+      ],
+    };
+
+    const pubs = RenderService.generatePublications('camp1', [cp], dummyProducts, dummyBlocks, 350, 50, undefined, contentBlocksMap);
+
+    expect(pubs.length).toBe(1);
+    // Content blocks appear after the product detail section (inside lista block)
+    expect(pubs[0].texto_generado).toContain('*Descripción*');
+    expect(pubs[0].texto_generado).toContain('Producto de alta calidad');
+    expect(pubs[0].texto_generado).toContain('*Características*');
+    expect(pubs[0].texto_generado).toContain('• Ligero');
+    expect(pubs[0].texto_generado).toContain('• Durable');
+    // Still contains normal precio and caja (unchanged by content blocks)
+    expect(pubs[0].texto_generado).toContain('💰 Precio: $3500 CUP');
+    expect(pubs[0].texto_generado).toContain('📦 Caja (5 uds): $17500 CUP');
+  });
+
+  it('debe mantener compatibilidad hacia atrás cuando los mapas opcionales se omiten', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1',
+      campaña_id: 'camp1',
+      producto_id: 'prod1',
+      orden: 1,
+      usar_precio_manual: false,
+      estado_envio: 'pendiente'
+    };
+
+    // Both old 6-arg and new 8-arg signatures without extra maps
+    const pubs6 = RenderService.generatePublications('camp1', [cp], dummyProducts, dummyBlocks, 350, 50);
+    const pubs8 = RenderService.generatePublications('camp1', [cp], dummyProducts, dummyBlocks, 350, 50, undefined, undefined);
+
+    expect(pubs6.length).toBe(1);
+    expect(pubs8.length).toBe(1);
+    expect(pubs6[0].texto_generado).toEqual(pubs8[0].texto_generado);
+    expect(pubs6[0].precio_unitario_final_cup).toBe(pubs8[0].precio_unitario_final_cup);
+    expect(pubs6[0].texto_generado).toContain('Hola mundo');
+    expect(pubs6[0].texto_generado).toContain('📦 *Producto 1*');
+  });
+
   it('debe lanzar error si el producto referenciado no existe', () => {
     const cp: CampañaProducto = {
       id: 'cp_invalid',

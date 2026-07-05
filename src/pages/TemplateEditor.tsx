@@ -131,6 +131,7 @@ export function TemplateEditor() {
             <li><strong>Texto:</strong> Agrega un párrafo de texto libre (ej. saludo, ofertas).</li>
             <li><strong>Lista:</strong> Representa dónde se insertarán los productos cuando se genere la campaña.</li>
             <li><strong>Separador:</strong> Agrega un divisor visual (ej. líneas o emojis).</li>
+            <li><strong>Variantes:</strong> Muestra las variantes (sabores, colores, tamaños) configuradas en cada producto.</li>
           </ul>
         </div>
       </div>
@@ -162,6 +163,7 @@ export function TemplateEditor() {
                       <option value="texto">Texto</option>
                       <option value="lista">Lista de Productos</option>
                       <option value="separador">Separador</option>
+                      <option value="variantes">Variantes</option>
                     </select>
                   </div>
                   

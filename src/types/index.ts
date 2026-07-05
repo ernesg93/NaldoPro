@@ -72,7 +72,7 @@ export interface Plantilla {
 export interface PlantillaBloque {
   id: string;
   plantilla_id: string;
-  tipo: string; // 'texto' | 'lista' | 'separador'
+  tipo: string; // 'texto' | 'lista' | 'separador' | 'variantes'
   titulo: string; // Titulo descriptivo o titulo de la lista
   contenido?: string; // Contenido libre para bloques tipo texto
   orden: number;

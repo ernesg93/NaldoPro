@@ -5,6 +5,8 @@ import { ProductService } from '../services/ProductService';
 import { TemplateService } from '../services/TemplateService';
 import { SettingsService } from '../services/SettingsService';
 import { RenderService } from '../services/RenderService';
+import { VariantService } from '../services/VariantService';
+import { ContentBlockService } from '../services/ContentBlockService';
 import type { Campaña, CampañaProducto, Producto } from '../types';
 import { Save, Play, GripVertical, Trash2, Plus, Share2 } from 'lucide-react';
 
@@ -94,13 +96,41 @@ export function CampaignEditor() {
 
       if (!config) throw new Error("Falta configuración global");
 
+      // Load variant groups and content blocks for all campaign products
+      const productVariantsMap: Record<string, import('../services/RenderService').ProductVariantGroup[]> = {};
+      const productContentBlocksMap: Record<string, import('../services/RenderService').ProductContentBlock[]> = {};
+
+      for (const cp of finalProds) {
+        const [variantGroups, contentBlocks] = await Promise.all([
+          VariantService.getProductVariantsGrouped(cp.producto_id),
+          ContentBlockService.getContentBlocksWithItems(cp.producto_id),
+        ]);
+
+        if (variantGroups.length > 0) {
+          productVariantsMap[cp.producto_id] = variantGroups.map(g => ({
+            tipo: g.tipo.nombre,
+            valores: g.values.map(v => v.valor),
+          }));
+        }
+
+        if (contentBlocks.length > 0) {
+          productContentBlocksMap[cp.producto_id] = contentBlocks.map(cb => ({
+            tipo: cb.block.tipo,
+            titulo: cb.block.titulo,
+            items: cb.items.map(i => ({ valor: i.valor })),
+          }));
+        }
+      }
+
       const publications = RenderService.generatePublications(
         campaign.id,
         finalProds,
         availableProducts,
         templateBlocks,
         campaign.tasa_usada,
-        config.redondeo_multiplo
+        config.redondeo_multiplo,
+        productVariantsMap,
+        productContentBlocksMap
       );
 
       await CampaignService.saveGeneration(campaign.id, campaign.tasa_usada, publications);
