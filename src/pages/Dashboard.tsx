@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { SettingsService } from '../services/SettingsService';
+import { SettingsService, DEFAULT_CONFIG } from '../services/SettingsService';
 import { ProductService } from '../services/ProductService';
 import { CampaignService } from '../services/CampaignService';
 import type { Configuracion, Campaña } from '../types';
@@ -22,12 +22,7 @@ export function Dashboard() {
       try {
         let cfg = await SettingsService.getConfiguracion();
         if (!cfg) {
-          await SettingsService.initializeDefaultConfig({
-            tasa_usd_cup: 350,
-            redondeo_multiplo: 5,
-            whatsapp_numero: '',
-            plantilla_default_id: 'default-template',
-          });
+          await SettingsService.initializeDefaultConfig({ ...DEFAULT_CONFIG });
           cfg = await SettingsService.getConfiguracion();
         }
         setConfig(cfg);
@@ -39,7 +34,7 @@ export function Dashboard() {
 
         setProductCount(products.length);
         setCampaignCount(campaigns.length);
-        setRecentCampaigns(campaigns.slice(0, 5));
+        setRecentCampaigns(campaigns.filter(c => c.estado !== 'borrador').slice(0, 5));
       } catch (err) {
         setError('Error al cargar el resumen del dashboard.');
       } finally {
@@ -53,12 +48,7 @@ export function Dashboard() {
     try {
       let cfg = config;
       if (!cfg) {
-        await SettingsService.initializeDefaultConfig({
-          tasa_usd_cup: 350,
-          redondeo_multiplo: 5,
-          whatsapp_numero: '',
-          plantilla_default_id: 'default-template',
-        });
+        await SettingsService.initializeDefaultConfig({ ...DEFAULT_CONFIG });
         cfg = await SettingsService.getConfiguracion();
       }
       const camp = await CampaignService.createCampaign(
@@ -93,10 +83,10 @@ export function Dashboard() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
           <p className="text-sm text-gray-500 font-medium">Tasa USD → CUP</p>
           <p className="text-3xl font-bold text-gray-900 mt-1">
-            ${config?.tasa_usd_cup ?? 350}
+            ${config?.tasa_usd_cup ?? DEFAULT_CONFIG.tasa_usd_cup}
           </p>
           <p className="text-xs text-gray-400 mt-1">
-            Redondeo: múltiplo de {config?.redondeo_multiplo ?? 5}
+            Redondeo: múltiplo de {config?.redondeo_multiplo ?? DEFAULT_CONFIG.redondeo_multiplo}
           </p>
         </div>
 

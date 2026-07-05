@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SettingsService } from '../services/SettingsService';
+import { SettingsService, DEFAULT_CONFIG } from '../services/SettingsService';
 import { Save, Info } from 'lucide-react';
 
 export function Settings() {
@@ -9,22 +9,17 @@ export function Settings() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const [tasa_usd_cup, setTasa] = useState(350);
-  const [redondeo_multiplo, setRedondeo] = useState(5);
-  const [whatsapp_numero, setWhatsapp] = useState('');
-  const [plantilla_default_id, setPlantilla] = useState('default-template');
+  const [tasa_usd_cup, setTasa] = useState(DEFAULT_CONFIG.tasa_usd_cup);
+  const [redondeo_multiplo, setRedondeo] = useState(DEFAULT_CONFIG.redondeo_multiplo);
+  const [whatsapp_numero, setWhatsapp] = useState(DEFAULT_CONFIG.whatsapp_numero);
+  const [plantilla_default_id, setPlantilla] = useState(DEFAULT_CONFIG.plantilla_default_id);
 
   useEffect(() => {
     async function load() {
       try {
         let cfg = await SettingsService.getConfiguracion();
         if (!cfg) {
-          await SettingsService.initializeDefaultConfig({
-            tasa_usd_cup: 350,
-            redondeo_multiplo: 5,
-            whatsapp_numero: '',
-            plantilla_default_id: 'default-template',
-          });
+          await SettingsService.initializeDefaultConfig({ ...DEFAULT_CONFIG });
           cfg = await SettingsService.getConfiguracion();
         }
         if (cfg) {

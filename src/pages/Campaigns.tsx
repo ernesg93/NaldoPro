@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CampaignService } from '../services/CampaignService';
-import { SettingsService } from '../services/SettingsService';
+import { SettingsService, DEFAULT_CONFIG } from '../services/SettingsService';
 import type { Campaña } from '../types';
 import { Plus } from 'lucide-react';
 
@@ -22,12 +22,7 @@ export function Campaigns() {
   const handleCreate = async () => {
     let config = await SettingsService.getConfiguracion();
     if (!config) {
-      await SettingsService.initializeDefaultConfig({
-        tasa_usd_cup: 350,
-        redondeo_multiplo: 5,
-        whatsapp_numero: '',
-        plantilla_default_id: 'default-template'
-      });
+      await SettingsService.initializeDefaultConfig({ ...DEFAULT_CONFIG });
       config = await SettingsService.getConfiguracion();
     }
     const camp = await CampaignService.createCampaign(`Campaña ${new Date().toLocaleDateString()}`, config!.tasa_usd_cup);

@@ -5,6 +5,14 @@ import type { Configuracion } from '../types';
 const SETTINGS_COLLECTION = 'settings';
 const SETTINGS_DOC_ID = 'global'; // Singleton global configuration for MVP
 
+/** Shared default configuration values used across components. */
+export const DEFAULT_CONFIG: Omit<Configuracion, 'id' | 'updated_at'> = {
+  tasa_usd_cup: 350,
+  redondeo_multiplo: 5,
+  whatsapp_numero: '',
+  plantilla_default_id: 'default-template',
+};
+
 export class SettingsService {
   /**
    * Obtiene la configuración global activa.
