@@ -6,3 +6,5 @@ dist/
 *.tsbuildinfo
 .codegraph/
 cloudinary-onboarding.local.js
+e2e-auth-state.json
+*.auth-state.json

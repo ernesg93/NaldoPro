@@ -15,22 +15,24 @@ export class ContentBlockService {
   static async getContentBlocks(productId: string): Promise<BloqueContenido[]> {
     const q = query(
       collection(db, CONTENT_BLOCKS_COLLECTION),
-      where('producto_id', '==', productId),
-      orderBy('orden', 'asc')
+      where('producto_id', '==', productId)
     );
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() })) as BloqueContenido[];
+    const blocks = snap.docs.map(d => ({ id: d.id, ...d.data() })) as BloqueContenido[];
+    blocks.sort((a, b) => a.orden - b.orden);
+    return blocks;
   }
 
   /** Loads the items for a single block, ordered by `orden`. */
   static async getBlockItems(bloqueId: string): Promise<BloqueItem[]> {
     const q = query(
       collection(db, BLOCK_ITEMS_COLLECTION),
-      where('bloque_id', '==', bloqueId),
-      orderBy('orden', 'asc')
+      where('bloque_id', '==', bloqueId)
     );
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() })) as BloqueItem[];
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() })) as BloqueItem[];
+    items.sort((a, b) => a.orden - b.orden);
+    return items;
   }
 
   /** Loads all blocks with items for a product in one go. */

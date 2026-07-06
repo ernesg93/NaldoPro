@@ -53,11 +53,12 @@ export class CampaignService {
   static async getCampaignProducts(campaignId: string): Promise<CampañaProducto[]> {
     const q = query(
       collection(db, CAMPAIGN_PRODUCTS_COLLECTION),
-      where('campaña_id', '==', campaignId),
-      orderBy('orden', 'asc')
+      where('campaña_id', '==', campaignId)
     );
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() })) as CampañaProducto[];
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() })) as CampañaProducto[];
+    items.sort((a, b) => a.orden - b.orden);
+    return items;
   }
 
   static async updateCampaignProductStatus(id: string, estado_envio: CampañaProducto['estado_envio']): Promise<void> {
