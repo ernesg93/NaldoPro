@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,10 +11,10 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Validación de configuración
-const missingKeys = Object.entries(firebaseConfig)
-  .filter(([_, value]) => !value)
-  .map(([key]) => key);
+// Sólo apiKey, authDomain, projectId, messagingSenderId y appId son obligatorios.
+// storageBucket es opcional (se omite si no se usa Firebase Storage).
+const REQUIRED = ['apiKey', 'authDomain', 'projectId', 'messagingSenderId', 'appId'] as const;
+const missingKeys = REQUIRED.filter(k => !firebaseConfig[k]);
 
 if (missingKeys.length > 0) {
   throw new Error(`Faltan variables de entorno requeridas para Firebase. Revisa tu configuración. Faltan: ${missingKeys.join(', ')}`);
@@ -25,4 +24,3 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
-export const storage = getStorage(app);
