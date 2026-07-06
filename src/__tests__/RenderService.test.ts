@@ -205,6 +205,104 @@ describe('RenderService', () => {
     expect(pubs6[0].texto_generado).toContain('📦 *Producto 1*');
   });
 
+  it('debe renderizar bloque precio explícito sin duplicación desde lista', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1', campaña_id: 'camp1', producto_id: 'prod1', orden: 1,
+      usar_precio_manual: false, estado_envio: 'pendiente'
+    };
+
+    const blocks: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'lista', titulo: '', orden: 1, visible: true },
+      { id: 'b2', plantilla_id: 't1', tipo: 'precio', titulo: 'Precio', orden: 2, visible: true },
+      { id: 'b3', plantilla_id: 't1', tipo: 'caja', titulo: 'Caja', orden: 3, visible: true },
+    ];
+
+    const pubs = RenderService.generatePublications('camp1', [cp], dummyProducts, blocks, 350, 50);
+
+    // precio and caja appear exactly once (from the explicit blocks, not duplicated from lista)
+    const matchesPrecio = (pubs[0].texto_generado.match(/💰 Precio:/g) || []).length;
+    const matchesCaja = (pubs[0].texto_generado.match(/📦 Caja \(/g) || []).length;
+    expect(matchesPrecio).toBe(1);
+    expect(matchesCaja).toBe(1);
+
+    // Verify the content from the explicit blocks
+    expect(pubs[0].texto_generado).toContain('💰 Precio: $3500 CUP');
+    expect(pubs[0].texto_generado).toContain('📦 Caja (5 uds): $17500 CUP');
+
+    // Verify the product name line from lista is still there
+    expect(pubs[0].texto_generado).toContain('📦 *Producto 1*');
+  });
+
+  it('debe mantener compatibilidad con lista-sin-explicitos (precio/caja desde lista)', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1', campaña_id: 'camp1', producto_id: 'prod1', orden: 1,
+      usar_precio_manual: false, estado_envio: 'pendiente'
+    };
+
+    // Template with only lista — should include price/caja inside lista (legacy compat)
+    const blocks: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'lista', titulo: '', orden: 1, visible: true },
+    ];
+
+    const pubs = RenderService.generatePublications('camp1', [cp], dummyProducts, blocks, 350, 50);
+
+    expect(pubs[0].texto_generado).toContain('💰 Precio: $3500 CUP');
+    expect(pubs[0].texto_generado).toContain('📦 Caja (5 uds): $17500 CUP');
+    expect(pubs[0].texto_generado).toContain('📦 *Producto 1*');
+  });
+
+  it('debe suprimir precio y caja de lista cuando existen bloques explícitos ocultos', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1', campaña_id: 'camp1', producto_id: 'prod1', orden: 1,
+      usar_precio_manual: false, estado_envio: 'pendiente'
+    };
+
+    // Template with lista + hidden precio + hidden caja
+    const blocks: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'lista', titulo: '', orden: 1, visible: true },
+      { id: 'b2', plantilla_id: 't1', tipo: 'precio', titulo: 'Precio', orden: 2, visible: false },
+      { id: 'b3', plantilla_id: 't1', tipo: 'caja', titulo: 'Caja', orden: 3, visible: false },
+    ];
+
+    const pubs = RenderService.generatePublications('camp1', [cp], dummyProducts, blocks, 350, 50);
+
+    // Product name from lista should still render
+    expect(pubs[0].texto_generado).toContain('📦 *Producto 1*');
+
+    // Since explicit precio/caja blocks exist (even hidden), lista must NOT
+    // render those lines — and the hidden blocks don't render either.
+    expect(pubs[0].texto_generado).not.toContain('💰 Precio:');
+    expect(pubs[0].texto_generado).not.toContain('📦 Caja (');
+  });
+
+  it('debe controlar imagen_url según presencia/visibilidad del bloque imagen', () => {
+    const cp: CampañaProducto = {
+      id: 'cp1', campaña_id: 'camp1', producto_id: 'prod1', orden: 1,
+      usar_precio_manual: false, estado_envio: 'pendiente'
+    };
+
+    // Test 1: sin bloque imagen → imagen_url hereda de producto (legacy)
+    const blocksNoImagen: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'texto', titulo: 'T', contenido: 'C', orden: 1, visible: true },
+    ];
+    const pubs1 = RenderService.generatePublications('camp1', [cp], dummyProducts, blocksNoImagen, 350, 50);
+    expect(pubs1[0].imagen_url).toBe('img1.jpg');
+
+    // Test 2: bloque imagen visible → imagen_url = product.imagen_url
+    const blocksVisible: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'imagen', titulo: 'Img', orden: 1, visible: true },
+    ];
+    const pubs2 = RenderService.generatePublications('camp1', [cp], dummyProducts, blocksVisible, 350, 50);
+    expect(pubs2[0].imagen_url).toBe('img1.jpg');
+
+    // Test 3: bloque imagen oculto → imagen_url = ''
+    const blocksHidden: PlantillaBloque[] = [
+      { id: 'b1', plantilla_id: 't1', tipo: 'imagen', titulo: 'Img', orden: 1, visible: false },
+    ];
+    const pubs3 = RenderService.generatePublications('camp1', [cp], dummyProducts, blocksHidden, 350, 50);
+    expect(pubs3[0].imagen_url).toBe('');
+  });
+
   it('debe lanzar error si el producto referenciado no existe', () => {
     const cp: CampañaProducto = {
       id: 'cp_invalid',

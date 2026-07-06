@@ -47,10 +47,34 @@ export class TemplateService {
       {
         id: 'block-3',
         plantilla_id: DEFAULT_TEMPLATE_ID,
+        tipo: 'precio',
+        titulo: 'Precio',
+        orden: 3,
+        visible: true,
+      },
+      {
+        id: 'block-4',
+        plantilla_id: DEFAULT_TEMPLATE_ID,
+        tipo: 'caja',
+        titulo: 'Caja',
+        orden: 4,
+        visible: true,
+      },
+      {
+        id: 'block-5',
+        plantilla_id: DEFAULT_TEMPLATE_ID,
+        tipo: 'imagen',
+        titulo: 'Imagen',
+        orden: 5,
+        visible: true,
+      },
+      {
+        id: 'block-6',
+        plantilla_id: DEFAULT_TEMPLATE_ID,
         tipo: 'texto',
         titulo: 'Despedida',
         contenido: 'Contáctanos para más info.',
-        orden: 3,
+        orden: 6,
         visible: true,
       }
     ];

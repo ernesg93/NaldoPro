@@ -129,9 +129,12 @@ export function TemplateEditor() {
           <p className="font-medium mb-1">Acerca de los bloques</p>
           <ul className="list-disc pl-4 space-y-1">
             <li><strong>Texto:</strong> Agrega un párrafo de texto libre (ej. saludo, ofertas).</li>
-            <li><strong>Lista:</strong> Representa dónde se insertarán los productos cuando se genere la campaña.</li>
+            <li><strong>Lista:</strong> Muestra el nombre y la marca del producto. Incluye precio y caja solo si no hay bloques explícitos de esos tipos.</li>
             <li><strong>Separador:</strong> Agrega un divisor visual (ej. líneas o emojis).</li>
             <li><strong>Variantes:</strong> Muestra las variantes (sabores, colores, tamaños) configuradas en cada producto.</li>
+            <li><strong>Imagen:</strong> Controla si se muestra la imagen del producto en la publicación.</li>
+            <li><strong>Precio:</strong> Muestra el precio unitario del producto.</li>
+            <li><strong>Caja:</strong> Muestra el precio por caja del producto.</li>
           </ul>
         </div>
       </div>
@@ -164,6 +167,9 @@ export function TemplateEditor() {
                       <option value="lista">Lista de Productos</option>
                       <option value="separador">Separador</option>
                       <option value="variantes">Variantes</option>
+                      <option value="imagen">Imagen</option>
+                      <option value="precio">Precio</option>
+                      <option value="caja">Caja</option>
                     </select>
                   </div>
                   

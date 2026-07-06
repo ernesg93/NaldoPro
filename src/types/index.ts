@@ -69,10 +69,19 @@ export interface Plantilla {
   nombre: string;
 }
 
+export type TipoBloque =
+  | 'texto'
+  | 'lista'
+  | 'separador'
+  | 'variantes'
+  | 'imagen'
+  | 'precio'
+  | 'caja';
+
 export interface PlantillaBloque {
   id: string;
   plantilla_id: string;
-  tipo: string; // 'texto' | 'lista' | 'separador' | 'variantes'
+  tipo: TipoBloque;
   titulo: string; // Titulo descriptivo o titulo de la lista
   contenido?: string; // Contenido libre para bloques tipo texto
   orden: number;
