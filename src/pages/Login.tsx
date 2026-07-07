@@ -19,7 +19,7 @@ export function Login() {
       setLoading(true);
       await AuthService.login(email, password);
       navigate(from, { replace: true });
-    } catch (err: any) {
+    } catch {
       setError('Credenciales inválidas o error de autenticación.');
     } finally {
       setLoading(false);
