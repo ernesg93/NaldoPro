@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthService } from '../services/AuthService';
+import { AuthService, resolveAuthDisplayError } from '../services/AuthService';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -19,8 +19,8 @@ export function Login() {
       setLoading(true);
       await AuthService.login(email, password);
       navigate(from, { replace: true });
-    } catch {
-      setError('Credenciales inválidas o error de autenticación.');
+    } catch (err) {
+      setError(resolveAuthDisplayError(err));
     } finally {
       setLoading(false);
     }
