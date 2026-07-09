@@ -12,7 +12,7 @@ function mockNavigatorShare() {
   const { clipboard: _clipboard, ...navRest } = navigator as unknown as Record<string, unknown>;
   vi.stubGlobal('navigator', {
     ...navRest,
-    share: vi.fn<[data?: ShareData], Promise<void>>(),
+    share: vi.fn(),
   } as unknown as Navigator & { share: typeof vi.fn });
 }
 
@@ -27,7 +27,7 @@ function mockClipboardWrite() {
   vi.stubGlobal('navigator', {
     ...navigator,
     clipboard: {
-      writeText: vi.fn<[text: string], Promise<void>>(),
+      writeText: vi.fn(),
     },
   });
 }
