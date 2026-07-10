@@ -196,7 +196,7 @@ export function Dashboard() {
                     to={`/campaigns/${c.id}`}
                     className="block hover:bg-gray-50 transition-colors p-4"
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium text-gray-900 truncate">
                           {c.nombre}
@@ -207,7 +207,7 @@ export function Dashboard() {
                         </p>
                       </div>
                       <span
-                        className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize self-start sm:self-auto
                           ${c.estado === 'compartida' ? 'bg-blue-100 text-blue-800' : ''}
                           ${c.estado === 'generada' ? 'bg-green-100 text-green-800' : ''}
                           ${c.estado === 'borrador' ? 'bg-amber-100 text-amber-800' : ''}`}

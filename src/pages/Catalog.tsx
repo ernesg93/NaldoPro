@@ -115,7 +115,7 @@ export function Catalog() {
             {filteredProducts.map(product => (
               <li key={product.id}>
                 <Link to={`/product/${product.id}`} className="block hover:bg-gray-50 transition-colors p-4">
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0">
                     <img 
                       src={product.imagen_url || 'https://via.placeholder.com/64?text=Foto'} 
                       alt={product.nombre} 
@@ -128,11 +128,11 @@ export function Catalog() {
                         {product.marca ? ` • ${product.marca}` : ''}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right min-w-0">
                       <p className="text-sm font-medium text-gray-900">${product.precio_usd.toFixed(2)} USD</p>
                       <p className="text-xs text-gray-500">Caja: {product.cantidad_por_caja} ud</p>
                     </div>
-                    <div className="hidden sm:block">
+                    <div className="sm:text-right min-w-0">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
                         ${product.estado === 'activo' ? 'bg-green-100 text-green-800' : 
                           product.estado === 'agotado' ? 'bg-red-100 text-red-800' : 

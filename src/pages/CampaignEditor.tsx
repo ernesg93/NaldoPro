@@ -162,14 +162,14 @@ export function CampaignEditor() {
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
           {campaign.estado !== 'borrador' && (
-            <button onClick={() => navigate(`/campaigns/${campaign.id}/share`)} className="flex-1 sm:flex-none justify-center bg-blue-600 text-white px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-blue-700 transition-colors">
+            <button onClick={() => navigate(`/campaigns/${campaign.id}/share`)} className="flex-1 sm:flex-none justify-center min-h-11 bg-blue-600 text-white px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-blue-700 transition-colors">
               <Share2 className="w-4 h-4" /> Compartir
             </button>
           )}
-          <button onClick={handleSave} disabled={saving || generating} className="flex-1 sm:flex-none justify-center bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-gray-200 transition-colors">
+          <button onClick={handleSave} disabled={saving || generating} className="flex-1 sm:flex-none justify-center min-h-11 bg-gray-100 text-gray-700 px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-gray-200 transition-colors">
             <Save className="w-4 h-4" /> {saving ? 'Guardando...' : 'Guardar'}
           </button>
-          <button onClick={handleGenerate} disabled={saving || generating} className="flex-1 sm:flex-none justify-center bg-gray-900 text-white px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors">
+          <button onClick={handleGenerate} disabled={saving || generating} className="flex-1 sm:flex-none justify-center min-h-11 bg-gray-900 text-white px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors">
             <Play className="w-4 h-4" /> {generating ? 'Generando...' : 'Generar'}
           </button>
         </div>
@@ -188,10 +188,10 @@ export function CampaignEditor() {
               const product = availableProducts.find(p => p.id === cp.producto_id);
               if (!product) return null;
               return (
-                <div key={cp.id} className="flex gap-4 items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 group">
-                  <div className="flex flex-col gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => moveProduct(index, 'up')} disabled={index === 0} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><GripVertical className="w-4 h-4" /></button>
-                    <button onClick={() => moveProduct(index, 'down')} disabled={index === campaignProducts.length - 1} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><GripVertical className="w-4 h-4 rotate-180" /></button>
+                <div key={cp.id} className="flex flex-col sm:flex-row gap-3 sm:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 group">
+                  <div className="flex sm:flex-col gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <button aria-label="Mover producto arriba" onClick={() => moveProduct(index, 'up')} disabled={index === 0} className="min-h-8 min-w-8 p-1 hover:bg-gray-100 rounded disabled:opacity-30 flex items-center justify-center"><GripVertical className="w-4 h-4" /></button>
+                    <button aria-label="Mover producto abajo" onClick={() => moveProduct(index, 'down')} disabled={index === campaignProducts.length - 1} className="min-h-8 min-w-8 p-1 hover:bg-gray-100 rounded disabled:opacity-30 flex items-center justify-center"><GripVertical className="w-4 h-4 rotate-180" /></button>
                   </div>
                   
                   <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
@@ -203,7 +203,7 @@ export function CampaignEditor() {
                     <p className="text-sm text-gray-500">${product.precio_usd} USD</p>
                   </div>
                   
-                  <div className="w-40 flex-shrink-0 space-y-2">
+                  <div className="w-full sm:w-40 flex-shrink-0 space-y-2">
                     <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
                       <input 
                         type="checkbox" 
@@ -224,7 +224,7 @@ export function CampaignEditor() {
                     )}
                   </div>
                   
-                  <button onClick={() => handleRemoveProduct(cp.id)} className="text-red-500 hover:bg-red-50 p-2 rounded transition-colors flex-shrink-0">
+                  <button aria-label="Eliminar producto de campaña" onClick={() => handleRemoveProduct(cp.id)} className="min-h-8 min-w-8 text-red-500 hover:bg-red-50 p-2 rounded transition-colors flex-shrink-0 flex items-center justify-center self-end sm:self-auto">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -239,7 +239,7 @@ export function CampaignEditor() {
             {availableProducts.map(p => {
               const countAdded = campaignProducts.filter(cp => cp.producto_id === p.id).length;
               return (
-                <div key={p.id} className="flex items-center justify-between gap-3 p-2 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors">
+                <div key={p.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 border border-gray-100 rounded-md hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="w-10 h-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
                       <img src={p.imagen_url} className="w-full h-full object-cover" />
@@ -249,10 +249,9 @@ export function CampaignEditor() {
                       <p className="text-xs text-gray-500">${p.precio_usd} USD</p>
                     </div>
                   </div>
-                  <button 
+                  <button aria-label="Agregar a campaña"
                     onClick={() => handleAddProduct(p.id)}
-                    className="p-1.5 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-colors flex-shrink-0"
-                    title="Agregar a campaña"
+                    className="min-h-8 min-w-8 p-1.5 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-colors flex-shrink-0 flex items-center justify-center self-end sm:self-auto"
                   >
                     <Plus className="w-4 h-4" />
                   </button>

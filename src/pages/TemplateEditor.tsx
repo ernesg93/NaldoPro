@@ -104,7 +104,7 @@ export function TemplateEditor() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="sm:w-auto w-full inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="sm:w-auto w-full inline-flex items-center justify-center min-h-11 gap-2 bg-gray-900 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Guardando...' : 'Guardar Cambios'}
@@ -144,19 +144,19 @@ export function TemplateEditor() {
         
         <div className="space-y-3">
           {blocks.map((block, index) => (
-            <div key={block.id} className="flex items-start gap-3 bg-gray-50 p-4 rounded-md border border-gray-200 group">
-              <div className="flex flex-col gap-1 mt-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => moveBlock(index, 'up')} disabled={index === 0} className="p-1 hover:bg-gray-200 rounded disabled:opacity-30">
+            <div key={block.id} className="flex flex-col sm:flex-row items-start gap-3 bg-gray-50 p-4 rounded-md border border-gray-200 group min-h-8">
+              <div className="flex sm:flex-col gap-1 mt-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                <button aria-label="Mover bloque arriba" onClick={() => moveBlock(index, 'up')} disabled={index === 0} className="min-h-8 min-w-8 p-1 hover:bg-gray-200 rounded disabled:opacity-30 flex items-center justify-center">
                   <GripVertical className="w-4 h-4" />
                 </button>
-                <button onClick={() => moveBlock(index, 'down')} disabled={index === blocks.length - 1} className="p-1 hover:bg-gray-200 rounded disabled:opacity-30">
+                <button aria-label="Mover bloque abajo" onClick={() => moveBlock(index, 'down')} disabled={index === blocks.length - 1} className="min-h-8 min-w-8 p-1 hover:bg-gray-200 rounded disabled:opacity-30 flex items-center justify-center">
                   <GripVertical className="w-4 h-4 rotate-180" />
                 </button>
               </div>
               
               <div className="flex-1 space-y-3">
-                <div className="flex gap-4">
-                  <div className="w-1/3">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="w-full sm:w-1/3">
                     <label className="block text-xs font-medium text-gray-500 mb-1">Tipo de Bloque</label>
                     <select
                       value={block.tipo}
@@ -173,7 +173,7 @@ export function TemplateEditor() {
                     </select>
                   </div>
                   
-                  <div className="w-2/3 space-y-3">
+                  <div className="w-full sm:w-2/3 space-y-3">
                     <div>
                       <label className="block text-xs font-medium text-gray-500 mb-1">
                         Título {block.tipo === 'texto' && '(Opcional/Referencia)'}
@@ -218,9 +218,9 @@ export function TemplateEditor() {
               </div>
 
               <button
+                aria-label="Eliminar bloque"
                 onClick={() => handleRemoveBlock(block.id)}
-                className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                title="Eliminar bloque"
+                className="min-h-8 min-w-8 p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors flex items-center justify-center self-end sm:self-auto"
               >
                 <Trash2 className="w-4 h-4" />
               </button>

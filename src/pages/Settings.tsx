@@ -73,7 +73,7 @@ export function Settings() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="sm:w-auto w-full inline-flex items-center justify-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="sm:w-auto w-full inline-flex items-center justify-center min-h-11 gap-2 bg-gray-900 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Guardando...' : 'Guardar Cambios'}
@@ -153,16 +153,16 @@ export function Settings() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Plantilla por defecto
           </label>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
             <input
               type="text"
               value={plantilla_default_id}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-500 cursor-not-allowed"
+              className="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-500 cursor-not-allowed"
               readOnly
             />
             <Link
               to="/template"
-              className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors flex-shrink-0"
+              className="min-h-11 inline-flex items-center justify-center gap-1 bg-gray-100 text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors sm:flex-shrink-0"
             >
               Editar bloques
             </Link>

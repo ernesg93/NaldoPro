@@ -35,7 +35,7 @@ export function Campaigns() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Campañas</h1>
-        <button onClick={handleCreate} className="bg-gray-900 text-white px-4 py-2 rounded-md font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors">
+        <button onClick={handleCreate} className="bg-gray-900 text-white min-h-11 px-4 py-2 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors">
           <Plus className="w-4 h-4" />
           Nueva Campaña
         </button>

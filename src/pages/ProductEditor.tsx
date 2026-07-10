@@ -355,7 +355,7 @@ export function ProductEditor() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="sm:col-span-2 space-y-4">
             <label className="block text-sm font-medium text-gray-700">Imagen del producto</label>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-start gap-4">
               <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden">
                 {imagenUrl ? (
                   <img src={imagenUrl} alt="Preview" className="w-full h-full object-cover" />
@@ -375,7 +375,7 @@ export function ProductEditor() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none disabled:opacity-50"
+                  className="min-h-11 inline-flex items-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none disabled:opacity-50"
                 >
                   <Upload className="w-4 h-4" />
                   {uploading ? 'Subiendo...' : 'Subir imagen'}
@@ -546,23 +546,25 @@ export function ProductEditor() {
             {contentBlocks.map((block, index) => (
               <div
                 key={block.tempId}
-                className="flex items-start gap-3 bg-gray-50 p-4 rounded-md border border-gray-200 group"
+                className="flex flex-col sm:flex-row sm:items-start gap-3 bg-gray-50 p-4 rounded-md border border-gray-200 group min-h-8"
               >
                 {/* reorder */}
-                <div className="flex flex-col gap-1 mt-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                <div className="flex sm:flex-col gap-1 mt-1 opacity-50 group-hover:opacity-100 transition-opacity">
                   <button
                     type="button"
+                    aria-label="Mover bloque arriba"
                     onClick={() => moveBlock(index, 'up')}
                     disabled={index === 0}
-                    className="p-1 hover:bg-gray-200 rounded disabled:opacity-30"
+                    className="min-h-8 min-w-8 p-1 hover:bg-gray-200 rounded disabled:opacity-30 flex items-center justify-center"
                   >
                     <GripVertical className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
+                    aria-label="Mover bloque abajo"
                     onClick={() => moveBlock(index, 'down')}
                     disabled={index === contentBlocks.length - 1}
-                    className="p-1 hover:bg-gray-200 rounded disabled:opacity-30"
+                    className="min-h-8 min-w-8 p-1 hover:bg-gray-200 rounded disabled:opacity-30 flex items-center justify-center"
                   >
                     <GripVertical className="w-4 h-4 rotate-180" />
                   </button>
@@ -570,8 +572,8 @@ export function ProductEditor() {
 
                 {/* block body */}
                 <div className="flex-1 space-y-3">
-                  <div className="flex gap-4">
-                    <div className="w-1/3">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="w-full sm:w-1/3">
                       <label className="block text-xs font-medium text-gray-500 mb-1">Tipo</label>
                       <select
                         value={block.tipo}
@@ -583,7 +585,7 @@ export function ProductEditor() {
                         <option value="separador">Separador</option>
                       </select>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <label className="block text-xs font-medium text-gray-500 mb-1">Título</label>
                       <input
                         type="text"
@@ -623,20 +625,20 @@ export function ProductEditor() {
                     <div className="space-y-2">
                       <label className="block text-xs font-medium text-gray-500">Elementos de la lista</label>
                       {block.items.map((item) => (
-                        <div key={item.tempId} className="flex items-center gap-2">
+                        <div key={item.tempId} className="flex items-start gap-2 min-w-0">
                           <span className="text-gray-400">•</span>
                           <input
                             type="text"
                             value={item.valor}
                             onChange={(e) => updateBlockItem(block.tempId, item.tempId, e.target.value)}
                             placeholder="Valor del elemento"
-                            className="flex-1 px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"
+                            className="flex-1 min-w-0 min-h-8 px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-900"
                           />
                           <button
                             type="button"
+                            aria-label="Eliminar elemento"
                             onClick={() => removeBlockItem(block.tempId, item.tempId)}
-                            className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                            title="Eliminar elemento"
+                            className="min-h-8 min-w-8 p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors flex items-center justify-center"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -645,7 +647,7 @@ export function ProductEditor() {
                       <button
                         type="button"
                         onClick={() => addBlockItem(block.tempId)}
-                        className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                        className="min-h-8 text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                       >
                         <Plus className="w-3 h-3" /> Agregar elemento
                       </button>
@@ -662,9 +664,9 @@ export function ProductEditor() {
                 {/* delete */}
                 <button
                   type="button"
+                  aria-label="Eliminar bloque"
                   onClick={() => removeContentBlock(block.tempId)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                  title="Eliminar bloque"
+                  className="min-h-8 min-w-8 p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors flex items-center justify-center self-end sm:self-auto"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -674,17 +676,17 @@ export function ProductEditor() {
         </div>
 
         {/* ──── action buttons ──── */}
-        <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+        <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3 border-t border-gray-100">
           <Link
             to="/catalog"
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors"
+            className="min-h-11 inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium text-sm transition-colors"
           >
             Cancelar
           </Link>
           <button
             type="submit"
             disabled={saving || uploading}
-            className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 font-medium text-sm transition-colors disabled:opacity-50"
+            className="min-h-11 inline-flex items-center justify-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 font-medium text-sm transition-colors disabled:opacity-50"
           >
             {saving ? 'Guardando...' : 'Guardar producto'}
           </button>
