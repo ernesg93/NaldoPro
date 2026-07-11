@@ -15,6 +15,42 @@ export default defineConfig(() => {
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const normalizedId = id.replace(/\\/g, '/');
+
+            if (
+              normalizedId.includes('/node_modules/@firebase/firestore/') ||
+              normalizedId.includes('/node_modules/firebase/firestore/')
+            ) {
+              return 'vendor-firebase-firestore';
+            }
+
+            if (
+              normalizedId.includes('/node_modules/@firebase/auth/') ||
+              normalizedId.includes('/node_modules/firebase/auth/')
+            ) {
+              return 'vendor-firebase-auth';
+            }
+
+            if (normalizedId.includes('/node_modules/@firebase/') || normalizedId.includes('/node_modules/firebase/')) {
+              return 'vendor-firebase';
+            }
+
+            if (
+              normalizedId.includes('/node_modules/react/') ||
+              normalizedId.includes('/node_modules/react-dom/') ||
+              normalizedId.includes('/node_modules/react-router/') ||
+              normalizedId.includes('/node_modules/react-router-dom/')
+            ) {
+              return 'vendor-react';
+            }
+          },
+        },
+      },
+    },
     test: {
       allowOnly: false,
     },
